@@ -17,6 +17,7 @@ import java.util.Objects;
 
 /**
  * Description: 基于DiskLruCache的磁盘缓存管理
+ * 参考:https://blog.csdn.net/guolin_blog/article/details/28863651
  * Date: 2018/6/11
  *
  * @author jian.wen@ubtrobot.com
@@ -27,10 +28,10 @@ public class DiskCacheManager {
     private static final String TAG = "DiskCacheManager";
 
     /**
-     * /sdcard/Android/data/<application package>/cache/test
+     * /sdcard/Android/data/<application package>/cache/disklru
      * 可以根据实际业务进行更改
      */
-    private static final String CACHE_DIR_NAME = "test";
+    private static final String CACHE_DIR_NAME = "disklru";
 
     /**
      * 这里如果设置成app版本号,那么每次版本更新都会删除全部缓存
