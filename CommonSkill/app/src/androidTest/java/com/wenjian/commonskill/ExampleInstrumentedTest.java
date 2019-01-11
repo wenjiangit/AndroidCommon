@@ -3,6 +3,7 @@ package com.wenjian.commonskill;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.ViewConfiguration;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,4 +24,16 @@ public class ExampleInstrumentedTest {
 
         assertEquals("com.wenjian.commonskill", appContext.getPackageName());
     }
+
+
+      @Test
+    public void getTouchSlop() throws Exception {
+          int touchSlop = ViewConfiguration.get(InstrumentationRegistry.getTargetContext()).getScaledTouchSlop();
+
+          System.out.println("最小滑动距离= "+touchSlop);
+      }
+
+
+
+
 }

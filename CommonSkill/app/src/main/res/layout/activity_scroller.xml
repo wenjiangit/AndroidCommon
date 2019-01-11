@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <com.wenjian.commonskill.view.ScrollerLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:text="this is button1" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:text="this is button2" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:text="this is button3" />
+
+
+    </com.wenjian.commonskill.view.ScrollerLayout>
+
+
+
+    <com.wenjian.commonskill.view.TouchScrollView
+        android:background="@color/colorAccent"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+</FrameLayout>

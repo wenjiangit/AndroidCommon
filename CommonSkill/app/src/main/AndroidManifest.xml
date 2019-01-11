@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:name=".CommonApp"
@@ -17,6 +18,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".bluetooth.DeviceListActivity"
+            android:label="bluetooth">
 
             <!--
             <intent-filter>
@@ -27,24 +37,21 @@
             -->
         </activity>
         <activity
-            android:name=".bluetooth.DeviceListActivity"
-            android:label="bluetooth">
-           <!-- <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:name=".okhttp.OkhttpActivity"
+            android:label="okhttp" />
+        <activity android:name=".ui.DiskCacheActivity" />
+        <activity android:name=".ui.DigestActivity" />
+        <activity android:name=".ui.GlideActivity" />
+        <activity android:name=".ui.RetrofitActivity" />
+        <activity android:name=".ui.AnimatorActivity" />
+        <activity android:name=".ui.VelocityTrackerActivity" />
+        <activity android:name=".ui.ScrollerActivity" />
+        <activity android:name=".window.WindowActivity" />
+        <activity android:name=".ui.IntentServiceActivity" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
-        </activity>
-        <activity android:name=".okhttp.OkhttpActivity"
-            android:label="okhttp"
-            >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <service android:name=".thread.LocalIntentService" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-        </activity>
+        <activity android:name=".ui.BitmapActivity"></activity>
     </application>
 
 </manifest>

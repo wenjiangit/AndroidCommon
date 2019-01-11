@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">CommonSkill</string>
+    <string name="save_text">保存字符串</string>
+    <string name="get_text">获取字符串</string>
+    <string name="save_stream">保存输入流到文件</string>
+    <string name="get_stream">从本地文件获取输入流</string>
+    <string name="clear">清空磁盘缓存</string>
+    <string name="get_size">获取磁盘缓存大小</string>
+    <string name="md5">MD5</string>
+    <string name="sha1">sha1</string>
+    <string name="sha256">sha256</string>
+    <string name="simple_load">简单加载</string>
+    <string name="transform">转换</string>
+    <string name="circle_crop">原型裁剪</string>
+    <string name="center_crop">居中裁剪</string>
+    <string name="fit_center">居中</string>
+    <string name="blur">模糊</string>
+    <string name="download_only">只下载</string>
+    <string name="download_with_progress">下载时显示进度</string>
+    <string name="intercept_model">拦截器原理</string>
+    <string name="simple_get">简单get请求</string>
+    <string name="submit_form">提交表单</string>
+    <string name="submit_multibody">提交multiBody</string>
+    <string name="file_download">文件下载</string>
+    <string name="bind_rxjava">结合rxjava</string>
 </resources>

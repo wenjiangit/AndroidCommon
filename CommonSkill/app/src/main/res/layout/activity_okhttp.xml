@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,23 +7,34 @@
     tools:context="com.wenjian.commonskill.okhttp.OkhttpActivity">
 
     <Button
-        android:text="简单get请求"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:onClick="simpleGet"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:text="@string/simple_get" />
 
-      <Button
-        android:text="提交表单"
-        android:onClick="postForm"
+    <Button
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:onClick="postForm"
+        android:text="@string/submit_form" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="postMultiBody"
+        android:text="@string/submit_multibody" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="download"
+        android:text="@string/file_download" />
 
   <Button
-        android:text="提交multiBody"
-        android:onClick="postMultiBody"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
+        android:layout_height="wrap_content"
+        android:onClick="intercept"
+        android:text="@string/intercept_model" />
 
 
 </LinearLayout>

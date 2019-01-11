@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:context="com.wenjian.commonskill.ui.GlideActivity">
+
+        <ImageView
+            android:id="@+id/iv_show"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            tools:ignore="ContentDescription" />
+
+        <Button
+            android:id="@+id/btn_simple"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/simple_load" />
+
+        <Button
+            android:id="@+id/btn_circle_crop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/circle_crop" />
+
+        <Button
+            android:id="@+id/btn_fit_center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/fit_center" />
+
+        <Button
+            android:id="@+id/btn_center_crop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/center_crop" />
+
+
+        <Button
+            android:id="@+id/btn_blur"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/blur" />
+
+
+        <Button
+            android:id="@+id/btn_download_only"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/download_only" />
+
+
+        <Button
+            android:id="@+id/btn_download_with_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/download_with_progress" />
+
+
+    </LinearLayout>
+</ScrollView>

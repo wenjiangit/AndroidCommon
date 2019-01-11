@@ -2,7 +2,6 @@ package com.wenjian.commonskill.cache;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
 
 import com.jakewharton.disklrucache.DiskLruCache;
 import com.wenjian.commonskill.AppConfigure;
@@ -10,8 +9,6 @@ import com.wenjian.commonskill.AppConfigure;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 
 
@@ -23,15 +20,12 @@ import java.util.Objects;
  * @author jian.wen@ubtrobot.com
  */
 
-public class DiskCacheManager {
-
-    private static final String TAG = "DiskCacheManager";
-
+public class DiskCacheManager implements DisCache {
     /**
-     * /sdcard/Android/data/<application package>/cache/disklru
+     * /sdcard/Android/data/<application package>/cache/test
      * 可以根据实际业务进行更改
      */
-    private static final String CACHE_DIR_NAME = "disklru";
+    private static final String CACHE_DIR_NAME = "disk_cache_manager";
 
     /**
      * 这里如果设置成app版本号,那么每次版本更新都会删除全部缓存
@@ -48,27 +42,19 @@ public class DiskCacheManager {
     /**
      * 最大的缓存大小,10M比较合适
      */
-    private static final int MAX_SIZE = 10 * 1024 * 1024;
-
+    private static final int MAX_SIZE = 100 * 1024 * 1024;
+    private final File mDiskCacheDir;
     private DiskLruCache mDiskLruCache;
 
+    private SafeKeyGenerator mKeyGenerator;
+
     private DiskCacheManager() {
-        openCacheConnection();
-    }
-
-    /**
-     * 开启缓存连接
-     */
-    private void openCacheConnection() {
-        File diskCacheDir = getDiskCacheDir(AppConfigure.getApp(), CACHE_DIR_NAME);
-        if (!diskCacheDir.exists()) {
-            diskCacheDir.mkdirs();
-        }
-
-        try {
-            mDiskLruCache = DiskLruCache.open(diskCacheDir, APP_VERSION, VALUE_COUNT, MAX_SIZE);
-        } catch (IOException e) {
-            Log.e(TAG, "create disLruCache error: ", e);
+        mKeyGenerator = new SafeKeyGenerator();
+        mDiskCacheDir = getDiskCacheDir(AppConfigure.getApp(), CACHE_DIR_NAME);
+        if (!mDiskCacheDir.exists()) {
+            if (!mDiskCacheDir.mkdirs()) {
+                throw new RuntimeException("创建缓存文件夹失败,可能是没有申请权限");
+            }
         }
     }
 
@@ -82,8 +68,23 @@ public class DiskCacheManager {
         return new File(externalCacheDir, uniqueName);
     }
 
-    public static DiskCacheManager getInstance() {
+    public static DisCache getInstance() {
         return Holder.INSTANCE;
+    }
+
+    /**
+     * 获取总缓存大小
+     *
+     * @return size
+     */
+    @Override
+    public long getCacheSize() {
+        try {
+            return getDiskLruCache().size();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     /**
@@ -92,47 +93,46 @@ public class DiskCacheManager {
      * @param key   缓存的键
      * @param value 需要存储的字符串
      */
+    @Override
     public void putString(String key, String value) {
-        reopenIfNeed();
-        String cacheKey = makeCacheKey(key);
+        String cacheKey = mKeyGenerator.getSafeKey(key);
         try {
-            DiskLruCache.Editor editor = mDiskLruCache.edit(cacheKey);
+            DiskLruCache.Editor editor = getDiskLruCache().edit(cacheKey);
             if (editor != null) {
                 editor.set(0, value);
                 editor.commit();
+                getDiskLruCache().flush();
             }
-            mDiskLruCache.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    /**
-     * 在必要的时候重新打开缓存
-     */
-    private void reopenIfNeed() {
-        if (!mDiskLruCache.isClosed()) {
-            return;
+    private DiskLruCache getDiskLruCache() throws IOException {
+        if (mDiskLruCache == null) {
+            mDiskLruCache = DiskLruCache.open(mDiskCacheDir, APP_VERSION, VALUE_COUNT, MAX_SIZE);
         }
-        openCacheConnection();
+        return mDiskLruCache;
     }
 
     /**
-     * 通过MD5摘要算法生成的合格的文件名
+     * 获取字符串
      *
      * @param key 缓存的键
-     * @return 生成的32位的字符串
+     * @return 存储的字符串
      */
-    private String makeCacheKey(String key) {
-        String cacheKey;
+    @Override
+    public String getString(String key) {
+        String cacheKey = mKeyGenerator.getSafeKey(key);
         try {
-            final MessageDigest mDigest = MessageDigest.getInstance("MD5");
-            mDigest.update(key.getBytes());
-            cacheKey = DiskCacheHelper.bytesToHexString(mDigest.digest());
-        } catch (NoSuchAlgorithmException e) {
-            cacheKey = String.valueOf(key.hashCode());
+            DiskLruCache.Snapshot snapshot = getDiskLruCache().get(cacheKey);
+            if (snapshot != null) {
+                return snapshot.getString(0);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return cacheKey;
+        return null;
     }
 
     /**
@@ -141,16 +141,20 @@ public class DiskCacheManager {
      * @param key 缓存的键
      * @param in  输入流
      */
+    @Override
     public void putStream(String key, InputStream in) {
-        reopenIfNeed();
-        String cacheKey = makeCacheKey(key);
+        String cacheKey = mKeyGenerator.getSafeKey(key);
         try {
-            DiskLruCache.Editor editor = mDiskLruCache.edit(cacheKey);
+            DiskLruCache.Editor editor = getDiskLruCache().edit(cacheKey);
             if (editor != null) {
-                DiskCacheHelper.convert(in, editor.newOutputStream(0));
-                editor.commit();
+                boolean success = DiskCacheHelper.convert(in, editor.newOutputStream(0));
+                if (success) {
+                    editor.commit();
+                } else {
+                    editor.abort();
+                }
+                getDiskLruCache().flush();
             }
-            mDiskLruCache.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -162,11 +166,11 @@ public class DiskCacheManager {
      * @param key 缓存的键
      * @return 输入流
      */
+    @Override
     public InputStream getStream(String key) {
-        reopenIfNeed();
-        String cacheKey = makeCacheKey(key);
+        String cacheKey = mKeyGenerator.getSafeKey(key);
         try {
-            DiskLruCache.Snapshot snapshot = mDiskLruCache.get(cacheKey);
+            DiskLruCache.Snapshot snapshot = getDiskLruCache().get(cacheKey);
             if (snapshot != null) {
                 return snapshot.getInputStream(0);
             }
@@ -176,44 +180,32 @@ public class DiskCacheManager {
         return null;
     }
 
-    /**
-     * 获取字符串
-     *
-     * @param key 缓存的键
-     * @return 存储的字符串
-     */
-    public String getString(String key) {
-        reopenIfNeed();
-        String cacheKey = makeCacheKey(key);
+    @Override
+    public boolean delete(String key) {
+        String safeKey = mKeyGenerator.getSafeKey(key);
         try {
-            DiskLruCache.Snapshot snapshot = mDiskLruCache.get(cacheKey);
-            if (snapshot != null) {
-                return snapshot.getString(0);
-            }
+            return getDiskLruCache().remove(safeKey);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return false;
     }
 
-    /**
-     * 获取总缓存大小
-     *
-     * @return size
-     */
-    public long getCacheSize() {
-        return mDiskLruCache.size();
-    }
-
-    /**
-     * 删除所有缓存
-     */
-    public void delete() {
+    @Override
+    public void clear() {
         try {
-            mDiskLruCache.delete();
+            getDiskLruCache().delete();
+            resetDiskCache();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 重置LruCache
+     */
+    private void resetDiskCache() {
+        mDiskLruCache = null;
     }
 
     private static class Holder {

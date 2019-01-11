@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.wenjian.commonskill.ui.DiskCacheActivity">
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_put_str"
+        android:text="@string/save_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_get_str"
+        android:text="@string/get_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_put_stream"
+        android:text="@string/save_stream"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_get_stream"
+        android:text="@string/get_stream"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_clear"
+        android:text="@string/clear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_get_size"
+        android:text="@string/get_size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/iv_show"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+
+
+</LinearLayout>
